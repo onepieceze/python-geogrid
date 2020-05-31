@@ -8,9 +8,9 @@ This is a simple python interface.
 Numpy
 
 ## Installation
-'''bash
+```bash
 python3 setup.py install
-'''
+```
 
 ## usage
 You can refer to examples
