@@ -59,16 +59,10 @@ def _swig_add_metaclass(metaclass):
 class _SwigNonDynamicMeta(type):
     """Meta class to enforce nondynamic attributes (no new attributes) for a class"""
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
-
-
-
-def read_geogrid(arg1, len, rarray, isigned, endian, scalefactor, wordsize):
-    return _python_geogrid.read_geogrid(arg1, len, rarray, isigned, endian, scalefactor, wordsize)
-
-def write_geogrid(iarray, isigned, endian, scalefactor, wordsize):
-    return _python_geogrid.write_geogrid(iarray, isigned, endian, scalefactor, wordsize)
-
-import numpy as np
+try:
+  import numpy as np
+except:
+  raise ImportError("import numpy library error.")
 import os
 import re
 
