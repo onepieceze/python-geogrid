@@ -116,7 +116,7 @@ class geogrid:
   
   def __read_index(self, path):
     self.__read_model_error()
-    if not os.path.exists(f"{path}/index"): raise RuntimeError("index file not in directory.")
+    if not os.path.isfile(f"{path}/index"): raise RuntimeError("index file not in directory.")
     with open(f"{path}/index", "r") as f:
       content = f.readlines() 
     index_float = ["dx", "dy", "known_x", "known_y", "known_lat", "known_lon", "stdlon", "truelat1", "truelat2", "missing_value"]
@@ -159,11 +159,12 @@ class geogrid:
     for filename in filenames:
       match = re.match(r'(\d{5})-(\d{5}).(\d{5})-(\d{5})', filename)
       if not match: continue
-      tiles_infos[filename] = {}
-      tiles_infos[filename]["xstart"] = int(match.group(1))
-      tiles_infos[filename]["xend"]   = int(match.group(2))
-      tiles_infos[filename]["ystart"] = int(match.group(3))
-      tiles_infos[filename]["yend"]   = int(match.group(4))
+      file_root = f"{data_root}/{filename}"
+      tiles_infos[file_root] = {}
+      tiles_infos[file_root]["xstart"] = int(match.group(1))
+      tiles_infos[file_root]["xend"]   = int(match.group(2))
+      tiles_infos[file_root]["ystart"] = int(match.group(3))
+      tiles_infos[file_root]["yend"]   = int(match.group(4))
 
     count = 0
     for key, value in tiles_infos.items():
@@ -185,14 +186,16 @@ class geogrid:
     rarray = np.zeros(shape=(nz, ny, nx), dtype=np.float32)
 
     for key, value in tiles_infos.items():
+      print(filename)
       filename = key
-      xstart = value["xstart"]
-      xend   = value["xend"]
-      ystart = value["ystart"]
-      yend   = value["yend"]
+      nxstart = value["xstart"]
+      nxend   = value["xend"]
+      nystart = value["ystart"]
+      nyend   = value["yend"]
       status = _python_geogrid.read_geogrid(filename, len(filename), rarray, signed, endian, scale_factor, wordsize)
-      array[:, ystart-1:yend, xstart-1:xend] = rarray[:, ::-1, :]
+      array[:, (yend-ystart+1)-nyend: (yend-ystart+1)-nystart+1, nxstart-1:nxend] = rarray[:, ::-1, :]
       print(rarray)
+      print(np.max(rarray))
 
     return array, geotransform
 
@@ -248,7 +251,6 @@ class geogrid:
       nz = 1
       ny = shape[0]
       nx = shape[1]
-
 
     rarray = np.zeros(shape=(nz, ny, nx), dtype=np.float32)
 
