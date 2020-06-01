@@ -180,22 +180,19 @@ class geogrid:
         ystart = min(xstart, value["ystart"])
         yend   = max(yend  , value["yend"])
 
-    geotransform = (known_lon+(xstart-1)*dx, dx, 0.0, known_lat+(xend-1)*dy, 0.0, -dy)
+    geotransform = (known_lon+(xstart-1)*dx, dx, 0.0, known_lat+(yend-1)*dy, 0.0, -dy)
 
     array = np.full(shape=(nz, yend-ystart+1, xend-xstart+1), dtype=dtype, fill_value=fill_value)
     rarray = np.zeros(shape=(nz, ny, nx), dtype=np.float32)
 
     for key, value in tiles_infos.items():
-      print(filename)
-      filename = key
+      print(f"  read {key}")
       nxstart = value["xstart"]
       nxend   = value["xend"]
       nystart = value["ystart"]
       nyend   = value["yend"]
-      status = _python_geogrid.read_geogrid(filename, len(filename), rarray, signed, endian, scale_factor, wordsize)
+      status = _python_geogrid.read_geogrid(key, len(key), rarray, signed, endian, scale_factor, wordsize)
       array[:, (yend-ystart+1)-nyend: (yend-ystart+1)-nystart+1, nxstart-1:nxend] = rarray[:, ::-1, :]
-      print(rarray)
-      print(np.max(rarray))
 
     return array, geotransform
 
