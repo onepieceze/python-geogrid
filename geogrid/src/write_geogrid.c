@@ -98,7 +98,7 @@ int write_geogrid(
          break;
    }
 
-   printf("  writing %5.5i-%5.5i.%5.5i-%5.5i.",1,nx,1,ny);
+   printf("  writing %5.5i-%5.5i.%5.5i-%5.5i.\n",1,nx,1,ny);
    sprintf(fname,"%5.5i-%5.5i.%5.5i-%5.5i",1,nx,1,ny);
 
    /* Write array to file */
