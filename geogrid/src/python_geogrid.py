@@ -137,11 +137,10 @@ class geogrid:
 
     self.__read_index(data_root)
 
-    signed       = 1   if not self._index["signed"]        else self._index["signed"]
-    endian       = 0   if not self._index["endian"]        else self._index["endian"]
-    wordsize     = 1   if not self._index["wordsize"]      else self._index["wordsize"]
-    scale_factor = 1.0 if not self._index["scale_factor"]  else self._index["scale_factor"]
-    fill_value   = 255 if not self._index["missing_value"] else self._index["missing_value"]
+    signed       = 0      if not self._index["signed"]        else self._index["signed"]
+    endian       = 0      if not self._index["endian"]        else self._index["endian"]
+    scale_factor = 1.0    if not self._index["scale_factor"]  else self._index["scale_factor"]
+    fill_value   = -99999 if not self._index["missing_value"] else self._index["missing_value"]
 
     dx        = self._index["dx"]
     dy        = self._index["dy"]
@@ -232,9 +231,8 @@ class geogrid:
 
     self.__write_model_error()
 
-    signed       = 1   if not self._index["signed"]       else self._index["signed"]
+    signed       = 0   if not self._index["signed"]       else self._index["signed"]
     endian       = 0   if not self._index["endian"]       else self._index["endian"]
-    wordsize     = 1   if not self._index["wordsize"]     else self._index["wordsize"]
     scale_factor = 1.0 if not self._index["scale_factor"] else self._index["scale_factor"]
 
     ndim = array.ndim
