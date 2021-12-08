@@ -91,6 +91,7 @@ class geogrid:
     self._index["tile_z"         ] = None
     self._index["tile_z_start"   ] = None
     self._index["tile_z_end "    ] = None
+    self._index["filename_digits"] = None
     self._index["category_min"   ] = None
     self._index["category_max"   ] = None
     self._index["tile_bdr"       ] = None
