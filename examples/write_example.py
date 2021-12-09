@@ -1,4 +1,4 @@
-from python_geogrid import geogrid
+from python_geogrid import geogrid, np_byteorder, np_isigned
 import gdal
 
 ds = gdal.Open("./data/MCD12Q1_LandUse_2001.tif")
@@ -15,6 +15,8 @@ data    = in_band.ReadAsArray()
 out = geogrid("write")
 
 out.set_index(key="type"        , value="categorical")
+out.set_index(key="signed"      , value=np_isigned(data.dtype))
+out.set_index(key="endian"      , value=np_byteorder(data.dtype))
 out.set_index(key="category_min", value=1)
 out.set_index(key="category_min", value=20)
 out.set_index(key="projection"  , value="regular_ll")
@@ -24,7 +26,7 @@ out.set_index(key="known_x"     , value=1)
 out.set_index(key="known_y"     , value=1)
 out.set_index(key="known_lat"   , value=geotranform[3]+geotranform[5]*ysize)
 out.set_index(key="known_lon"   , value=geotranform[0])
-out.set_index(key="wordsize"    , value=1)
+out.set_index(key="wordsize"    , value=data.dtype.itemsize)
 out.set_index(key="tile_x"      , value=xsize)
 out.set_index(key="tile_y"      , value=ysize)
 out.set_index(key="tile_z"      , value=1)

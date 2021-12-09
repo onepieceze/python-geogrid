@@ -59,14 +59,14 @@ def _swig_add_metaclass(metaclass):
 class _SwigNonDynamicMeta(type):
     """Meta class to enforce nondynamic attributes (no new attributes) for a class"""
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
-    
+
+import os
+import re   
 import sys
 try:
   import numpy as np
 except:
   raise ImportError("import numpy library error.")
-import os
-import re
 
 def np_byteorder(dtype):
   byteorder = dtype.byteorder
@@ -149,21 +149,30 @@ class geogrid:
   def read_geogrid(self, data_root, dtype):
 
     self.__read_index(data_root)
+ 
+    if not self._index["signed"]:
+      signed = 0
+    else: 
+      signed = 1 if self._index["signed"] == "yes" else 0
 
-    signed       = 0      if not self._index["signed"]        else self._index["signed"]
-    endian       = 0      if not self._index["endian"]        else self._index["endian"]
-    scale_factor = 1.0    if not self._index["scale_factor"]  else self._index["scale_factor"]
-    fill_value   = -99999 if not self._index["missing_value"] else self._index["missing_value"]
+    if not self._index["endian"]:
+      endian = 0      
+    else: 
+      endian = 0 if self._index["endian"] == "big" else 1
 
-    dx        = self._index["dx"]
-    dy        = self._index["dy"]
-    known_x   = self._index["known_x"]
-    known_y   = self._index["known_y"]
-    known_lat = self._index["known_lat"]-(known_y-1)*dy
-    known_lon = self._index["known_lon"]-(known_x-1)*dx
-    nz        = self._index["tile_z"]
-    ny        = self._index["tile_y"]
-    nx        = self._index["tile_x"]
+    fill_value   = np.NAN if not self._index["missing_value"] else self._index["missing_value"]
+
+    scale_factor = 1.0
+    dx           = self._index["dx"]
+    dy           = self._index["dy"]
+    known_x      = self._index["known_x"]
+    known_y      = self._index["known_y"]
+    known_lat    = self._index["known_lat"]-(known_y-1)*dy
+    known_lon    = self._index["known_lon"]-(known_x-1)*dx
+    nz           = self._index["tile_z"]
+    ny           = self._index["tile_y"]
+    nx           = self._index["tile_x"]
+    wordsize     = self._index["wordsize"]
 
     filenames = os.listdir(data_root)
 
@@ -243,10 +252,19 @@ class geogrid:
   def write_geogrid(self, array, index_root):
 
     self.__write_model_error()
+   
+    if not self._index["signed"]:
+      signed = 0
+    else: 
+      signed = 1 if self._index["signed"] == "yes" else 0
 
-    signed       = 0   if not self._index["signed"]       else self._index["signed"]
-    endian       = 0   if not self._index["endian"]       else self._index["endian"]
-    scale_factor = 1.0 if not self._index["scale_factor"] else self._index["scale_factor"]
+    if not self._index["endian"]:
+      endian = 0      
+    else: 
+      endian = 0 if self._index["endian"] == "big" else 1
+
+    scale_factor = 1.0
+    wordsize = self._index["wordsize"]
 
     ndim = array.ndim
     shape = array.shape
