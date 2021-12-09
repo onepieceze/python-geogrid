@@ -59,12 +59,25 @@ def _swig_add_metaclass(metaclass):
 class _SwigNonDynamicMeta(type):
     """Meta class to enforce nondynamic attributes (no new attributes) for a class"""
     __setattr__ = _swig_setattr_nondynamic_class_variable(type.__setattr__)
+    
+import sys
 try:
   import numpy as np
 except:
   raise ImportError("import numpy library error.")
 import os
 import re
+
+def np_byteorder(dtype):
+  byteorder = dtype.byteorder
+  if byteorder == "=": return sys.byteorder
+  if byteorder == "<": return "little"
+  if byteorder == ">": return "big"
+  if byteorder == "|": return None
+
+def np_isigned(dtype):
+  if dtype.name[0] == "u": return 'no'
+  return 'yes'
 
 class geogrid:
 
