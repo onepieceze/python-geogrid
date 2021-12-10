@@ -225,12 +225,12 @@ class geogrid:
       for key, value in self._index.items():
         if not value: continue
         if key in index_float1: 
-          f.write(f"{key}={value:.11f}\n")
+          f.write(f"{key} = {value:.11f}\n")
           continue
         if key in index_float2:
-          f.write(f"{key}={value:.1f}\n")
+          f.write(f"{key} = {value:.1f}\n")
           continue
-        f.write(f"{key}={value}\n")
+        f.write(f"{key} = {value}\n")
 
   def get_index(self, **kw):
     self.__read_model_error()
