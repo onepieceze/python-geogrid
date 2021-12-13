@@ -150,12 +150,12 @@ class geogrid:
 
     self.__read_index(data_root)
  
-    if not self._index["signed"]:
+    if self._index["signed"] == None:
       signed = 0
     else: 
       signed = 1 if self._index["signed"] == "yes" else 0
 
-    if not self._index["endian"]:
+    if self._index["endian"] == None:
       endian = 0      
     else: 
       endian = 0 if self._index["endian"] == "big" else 1
@@ -253,12 +253,12 @@ class geogrid:
 
     self.__write_model_error()
    
-    if not self._index["signed"]:
+    if self._index["signed"] == None:
       signed = 0
     else: 
       signed = 1 if self._index["signed"] == "yes" else 0
 
-    if not self._index["endian"]:
+    if self._index["endian"] == None:
       endian = 0      
     else: 
       endian = 0 if self._index["endian"] == "big" else 1
@@ -280,8 +280,8 @@ class geogrid:
 
     rarray = np.zeros(shape=(nz, ny, nx), dtype=np.float32)
 
-    if ndim == 3: rarray[:, :, :] = array[:,::-1, :]
-    if ndim == 2: rarray[0, :, :] = array[::-1, :]
+    if ndim == 3: rarray[:, :, :] = array[:, :, :]
+    if ndim == 2: rarray[0, :, :] = array[:, :]
 
     self.__write_index(index_root)
 
